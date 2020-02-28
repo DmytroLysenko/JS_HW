@@ -15,20 +15,16 @@
 // Индия - 80 кредитов
 // Ямайка - 120 кредитов
 
-const country = prompt("Введите страну доставки:");
+let userChoice = prompt("Введите страну доставки:");
 
-if (country === null) {
+if (userChoice === null) {
   console.log("Отменено пользователем");
 } else {
-  let newNameCountry = country[0].toUpperCase();
-  
-  for (let i = 1; i < country.length; i++) {
-    newNameCountry += country[i].toLowerCase();
-  }
+  userChoice = userChoice[0].toUpperCase() + userChoice.substr(1).toLowerCase();
 
   let price;
 
-  switch (newNameCountry) {
+  switch (userChoice) {
     case "Китай":
       price = 100;
       break;
@@ -47,5 +43,7 @@ if (country === null) {
     default:
       console.log("В вашей стране доставка не доступна");
   }
-  console.log(`Доставка в ${newNameCountry} будет стоить ${price} кредитов`);
+  if (price) {
+    console.log(`Доставка в ${userChoice} будет стоить ${price} кредитов`);
+  }
 }
