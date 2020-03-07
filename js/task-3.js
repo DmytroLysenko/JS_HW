@@ -1,26 +1,60 @@
-// Напиши функцию findLongestWord(string), которая принимает параметром произвольную
-// строку (в строке будут только слова и пробелы) и возвращает самое длинное слово в этой строке.
+// Напиши функцию findBestEmployee(employees), которая принимает объект сотрудников
+//  и возвращает имя самого продуктивного (который выполнил больше всех задач).
+// Сотрудники и кол-во выполненых задач содержатся как свойства объекта в формате "имя":"кол-во задач".
+
 "use strict";
 
-const findLongestWord = function(string) {
-  string = string.split(" ");
-  let LongestWord = string[0];
-  for (let i = 1; i < string.length; i += 1) {
-    LongestWord =
-      LongestWord.length < string[i].length ? string[i] : LongestWord;
+console.log("TASK - 3");
 
-    // if (LongestWord.length < string[i].length) {
-    //   LongestWord = string[i];
-    // }
+// const findBestEmployee = function(employees) {
+//   let countEmployees = 0;
+//   let bestEmploye;
+//   for (const key in employees) {
+//     if (countEmployees === 0) {
+//       bestEmploye = key;
+//       countEmployees += 1;
+//     } else {
+//       bestEmploye = employees[key] > employees[bestEmploye] ? key : bestEmploye;
+//       countEmployees += 1;
+//     }
+//   }
+//   return bestEmploye;
+// };
+
+const findBestEmployee = function(employees) {
+  const emplArray = Object.entries(employees);
+  let bestEmploye = emplArray[0][0];
+  for (const item of emplArray) {
+    bestEmploye = item[1] > employees[bestEmploye] ? item[0] : bestEmploye;
   }
-  return LongestWord;
+  return bestEmploye;
 };
 
 /*
  * Вызовы функции для проверки работоспособности твоей реализации.
  */
-console.log(findLongestWord("The quick brown fox jumped over the lazy dog")); // 'jumped'
+console.log(
+  findBestEmployee({
+    ann: 29,
+    david: 35,
+    helen: 1,
+    lorence: 99
+  })
+); // lorence
 
-console.log(findLongestWord("Google do a roll")); // 'Google'
+console.log(
+  findBestEmployee({
+    poly: 12,
+    mango: 17,
+    ajax: 4
+  })
+); // mango
 
-console.log(findLongestWord("May the force be with you")); // 'force'
+console.log(
+  findBestEmployee({
+    lux: 147,
+    david: 21,
+    kiwi: 19,
+    chelsy: 38
+  })
+); // lux

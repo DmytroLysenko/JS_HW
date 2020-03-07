@@ -1,31 +1,29 @@
-// Напиши функцию logItems(array), которая получает массив и использует цикл for,
-// который для каждого элемента массива будет выводить в консоль сообщение
-// в формате [номер элемента] - [значение элемента].
+// Напиши скрипт, который, для объекта user, последовательно:
 
-// Нумерация должна начинаться с 1. К примеру для первого элемента
-// массива ['Mango', 'Poly', 'Ajax'] с индексом 0 будет выведено '1 - Mango', а для индекса 2 выведет '3 - Ajax'.
-
-// const logItems = function(array) {
-//   // твой код
-// };
-
-// /*
-//  * Вызовы функции для проверки работоспособности твоей реализации.
-//  */
-// logItems(['Mango', 'Poly', 'Ajax', 'Lux', 'Jay', 'Kong']);
-
-// logItems([5, 10, 15, 20, 25, 30, 35, 40, 45, 50]);
+// добавляет поле mood со значением 'happy'
+// заменяет значение hobby на 'skydiving'
+// заменяет значение premium на false
+// выводит содержимое объекта user в формате "ключ: значение", используя Object.keys() и for...of
 
 "use strict";
 
-const logItems = function(array) {
-  let i = 1;
-  for (const item of array) {
-    console.log(`${i} - ${item}`);
-    i += 1;
-  }
+console.log("TASK - 1");
+
+let user = {
+  name: "Mango",
+  age: 20,
+  hobby: "html",
+  premium: true
 };
 
-logItems(["Mango", "Poly", "Ajax", "Lux", "Jay", "Kong"]);
+user.mood = "happy";
+user.hobby = "skydiving";
+user.premium = false;
 
-logItems([5, 10, 15, 20, 25, 30, 35, 40, 45, 50]);
+// for (const key in user) {
+//   console.log(`${key} : ${user[key]}`);
+// }
+
+for (const key of Object.keys(user)) {
+  console.log(`${key} : ${user[key]}`);
+}
