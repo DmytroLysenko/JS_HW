@@ -1,29 +1,32 @@
-// Напиши функцию countProps(obj), считающую кол-во свойств в объекте. Функция возвращает число - количество свойств.
+// Исправь ошибки которые будут в консоли, чтобы скрипт заработал.
 
-"use strict";
+const inventory = {
+  items: ["Knife", "Gas mask"],
 
-console.log("TASK - 2");
+  add(itemName) {
+    console.log(`Adding ${itemName} to inventory`);
+    this.items.push(itemName);
+  },
 
-const countProps = function(obj) {
-  return Object.entries(obj).length;
+  remove(itemName) {
+    console.log(`Removing ${itemName} from inventory`);
+    this.items = this.items.filter(item => item !== itemName);
+  }
 };
 
-// const countProps = obj => Object.entries(obj).length;
+const invokeInventoryAction = function(itemName, action) {
+  console.log(`Invoking action on ${itemName}`);
+  action(itemName);
+};
 
-/*
- * Вызовы функции для проверки работоспособности твоей реализации.
- */
-console.log(countProps({})); // 0
+invokeInventoryAction("Medkit", inventory.add.bind(inventory));
+// Invoking action on Medkit
+// Adding Medkit to inventory
 
-console.log(countProps({ name: "Mango", age: 2 })); // 2
+console.log(inventory.items); // ['Knife', 'Gas mask', 'Medkit']
 
-console.log(countProps({ mail: "poly@mail.com", isOnline: true, score: 500 })); // 3
+invokeInventoryAction("Gas mask", inventory.remove.bind(inventory));
+// Invoking action on Gas mask
+// Removing Gas mask from inventory
 
-console.log(
-  countProps({
-    mail: "poly@mail.com",
-    isOnline: true,
-    score: 700,
-    isChecked: false
-  })
-); // 4
+console.log(inventory.items); // ['Knife', 'Medkit']

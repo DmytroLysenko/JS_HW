@@ -1,29 +1,27 @@
-// Напиши скрипт, который, для объекта user, последовательно:
+// Расставь отсутствующие this в методах объекта account.
 
-// добавляет поле mood со значением 'happy'
-// заменяет значение hobby на 'skydiving'
-// заменяет значение premium на false
-// выводит содержимое объекта user в формате "ключ: значение", используя Object.keys() и for...of
-
-"use strict";
-
-console.log("TASK - 1");
-
-let user = {
-  name: "Mango",
-  age: 20,
-  hobby: "html",
-  premium: true
+const account = {
+  owner: "Mango",
+  balance: 24000,
+  discount: 0.1,
+  orders: ["order-1", "order-2", "order-3"],
+  changeDiscount(value) {
+    this.discount = value;
+  },
+  showOrders() {
+    return this.orders;
+  },
+  addOrder(cost, order) {
+    this.balance -= cost;
+    this.orders.push(order);
+  }
 };
 
-user.mood = "happy";
-user.hobby = "skydiving";
-user.premium = false;
+account.changeDiscount(0.15);
+console.log(account.discount); // 0.15
 
-// for (const key in user) {
-//   console.log(`${key} : ${user[key]}`);
-// }
+console.table(account.showOrders()); // ['order-1', 'order-2', 'order-3']
 
-for (const key of Object.keys(user)) {
-  console.log(`${key} : ${user[key]}`);
-}
+account.addOrder(5000, "order-4");
+console.log(account.balance); // 19000
+console.table(account.showOrders()); // ['order-1', 'order-2', 'order-3', 'order-4']
