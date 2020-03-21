@@ -1,27 +1,29 @@
-// Расставь отсутствующие this в методах объекта account.
+// Напиши функцию-конструктор Account, которая создает объект со
+// свойствами login и email. В prototype функции-конструктора добавь
+// метод getInfo(), который выводит в консоль значения полей login
+// и email объекта который его вызвал.
 
-const account = {
-  owner: "Mango",
-  balance: 24000,
-  discount: 0.1,
-  orders: ["order-1", "order-2", "order-3"],
-  changeDiscount(value) {
-    this.discount = value;
-  },
-  showOrders() {
-    return this.orders;
-  },
-  addOrder(cost, order) {
-    this.balance -= cost;
-    this.orders.push(order);
-  }
+const Account = function({ login = "unknow", email = "no mail" } = {}) {
+  this.login = login;
+  this.email = email;
 };
 
-account.changeDiscount(0.15);
-console.log(account.discount); // 0.15
+Account.prototype.getInfo = function() {
+  console.log(`Login: ${this.login}, Email: ${this.email}`);
+};
 
-console.table(account.showOrders()); // ['order-1', 'order-2', 'order-3']
+console.log(Account.prototype.getInfo); // function
 
-account.addOrder(5000, "order-4");
-console.log(account.balance); // 19000
-console.table(account.showOrders()); // ['order-1', 'order-2', 'order-3', 'order-4']
+const mango = new Account({
+  login: "Mangozedog",
+  email: "mango@dog.woof"
+});
+
+mango.getInfo(); // Login: Mangozedog, Email: mango@dog.woof
+
+const poly = new Account({
+  login: "Poly",
+  email: "poly@mail.com"
+});
+
+poly.getInfo(); // Login: Poly, Email: poly@mail.com
