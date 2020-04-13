@@ -1,7 +1,16 @@
-// Получить массив объектов пользователей по цвету глаз (поле eyeColor).
-import users from "./users.js";
+// В HTML есть пустой список ul#ingredients.
+// В JS есть массив строк.
 
-const getUsersWithEyeColor = (users, color) =>
-  users.filter(user => user.eyeColor === color);
+const ingredients = [
+  'Картошка',
+  'Грибы',
+  'Чеснок',
+  'Помидоры',
+  'Зелень',
+  'Приправы',
+];
 
-console.log(getUsersWithEyeColor(users, "blue")); // [объект Moore Hensley, объект Sharlene Bush, объект Carey Barr]
+// Напиши скрипт, который для каждого элемента массива 
+// ingredients создаст отдельный li, после чего вставит 
+// все li за одну операцию в список ul.ingredients. 
+// Для создания DOM-узлов используй document.createElement().

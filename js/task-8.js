@@ -1,15 +1,12 @@
-// Массив имен всех пользователей у которых есть друг с указанным именем.
-import users from "./users.js";
+// Напиши скрипт создания и очистки коллекции элементов. 
+// Пользователь вводит количество элементов в input и нажимает кнопку Создать, 
+// после чего рендерится коллекция. При нажатии на кнопку Очистить, коллекция элементов очищается.
 
+// Создай функцию createBoxes(amount), которая принимает 1 параметр amount - число. 
+// Функция создает столько div, сколько указано в amount и добавляет их в div#boxes.
 
-// const getUsersWithFriend = (users, friendName) =>
-//   users.filter(user => user.friends.some(name => name === friendName)).map(user => user.name);
-
-  const getUsersWithFriend = (users, friendName) =>
-  users.filter(user => user.friends.includes(friendName)).map(user => user.name);
-
-console.log(getUsersWithFriend(users, "Briana Decker")); // [ 'Sharlene Bush', 'Sheree Anthony' ]
-console.log(getUsersWithFriend(users, "Goldie Gentry")); // [ 'Elma Head', 'Sheree Anthony' ]
-
-
-
+// Каждый созданный div:
+// Имеет случайный rgb цвет фона
+// Размеры самого первого div - 30px на 30px
+// Каждый следующий div после первого, должен быть шире и выше предыдущего на 10px
+// Создай функцию destroyBoxes(), которая очищает div#boxes.

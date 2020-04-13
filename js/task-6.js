@@ -1,10 +1,6 @@
-// Получить массив пользователей попадающих в возрастную категорию от min до max лет (поле age).
-import users from "./users.js";
+// Напиши скрипт, который бы при потере фокуса на инпуте, 
+// проверял его содержимое на правильное количество символов.
 
-const getUsersWithAge = (users, min, max) =>
-  users.filter(user => (user.age > min) & (user.age < max));
-
-console.log(getUsersWithAge(users, 20, 30)); // [объект Ross Vazquez, объект Elma Head, объект Carey Barr]
-
-console.log(getUsersWithAge(users, 30, 40));
-// [объект Moore Hensley, объект Sharlene Bush, объект Blackburn Dotson, объект Sheree Anthony]
+// Сколько символов должно быть в инпуте, указывается в его атрибуте data-length.
+// Если введено подходящее количество, то border инпута становится зеленым, если неправильное - красным.
+// Для добавления стилей, используй CSS-классы valid и invalid.

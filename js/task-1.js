@@ -1,7 +1,13 @@
-// Получить массив имен всех пользователей (поле name).
-import users from "./users.js";
+// В HTML есть список категорий ul#categories.
 
-const getUserNames = users => users.map(user => user.name);
+// Напиши скрипт, который выполнит следующие операции.
+// Посчитает и выведет в консоль количество категорий в ul#categories, 
+// то есть элементов li.item. Получится 'В списке 3 категории.'.
 
-console.log(getUserNames(users));
-// [ 'Moore Hensley', 'Sharlene Bush', 'Ross Vazquez', 'Elma Head', 'Carey Barr', 'Blackburn Dotson', 'Sheree Anthony' ]
+// Для каждого элемента li.item в списке ul#categories, найдет 
+// и выведет в консоль текст заголовка элемента (тега h2) и количество 
+// элементов в категории (всех вложенных в него элементов li).
+
+// Например для первой категории получится:
+// Категория: Животные
+// Количество элементов: 4

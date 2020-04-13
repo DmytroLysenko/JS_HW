@@ -1,7 +1,4 @@
-// Получить общую сумму баланса (поле balance) всех пользователей.
-import users from "./users.js";
-
-const calculateTotalBalance = users =>
-  users.reduce((total, user) => total + user.balance, 0);
-
-console.log(calculateTotalBalance(users)); // 20916
+// Напиши скрипт, который реагирует на изменение значения 
+// input#font-size-control (событие input) и изменяет инлайн-стиль 
+// span#text обновляя свойство font-size. В результате при перетаскивании 
+// ползунка будет меняться размер текста.
