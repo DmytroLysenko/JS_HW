@@ -25,3 +25,22 @@ const images = [
     alt: "Group of Horses Running",
   },
 ];
+
+const gallery = document.getElementById("gallery");
+gallery.classList.add("gallery__list");
+
+const galleryItems = document.createDocumentFragment();
+
+images.forEach(({ url, alt }, idx) => {
+  const galleryItem = document.createElement("li");
+  galleryItem.classList.add("gallery__item");
+  galleryItem.classList.add(`gallery__item--${idx + 1}`);
+  const image = document.createElement("img");
+  image.classList.add("gallery_img");
+  image.setAttribute("src", url);
+  image.setAttribute("alt", alt);
+  galleryItem.appendChild(image);
+  galleryItems.appendChild(galleryItem);
+});
+
+gallery.appendChild(galleryItems);
