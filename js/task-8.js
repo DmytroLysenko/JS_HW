@@ -22,7 +22,7 @@
 // Причина - не нашел решения красивого отображения, а именно
 // размещение дочернего элемента над родительским...
 
-const boxSize = 600;
+const boxSize = 300;
 
 const container = document.getElementById("boxes");
 const controls = document.getElementById("controls");
