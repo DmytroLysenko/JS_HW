@@ -22,7 +22,7 @@
 // Причина - не нашел решения красивого отображения, а именно
 // размещение дочернего элемента над родительским...
 
-const boxSize = 600;
+const boxSize = 300;
 
 const container = document.getElementById("boxes");
 const controls = document.getElementById("controls");
@@ -33,7 +33,12 @@ const destroy = document.querySelector('button[data-action="destroy"]');
 
 container.setAttribute(
   "style",
-  `width:${boxSize}px;height:${boxSize}px; margin:0 auto;`
+  ` width:${boxSize}px;
+    height:${boxSize}px; 
+    margin:0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;`
 );
 
 controls.addEventListener("click", makeControl);
@@ -42,10 +47,10 @@ function makeControl(event) {
   const target = event.target;
   if (target === render) {
     const amount = Number(input.value);
-    if (amount > 0) {
+    if (amount > 0 && amount < 150) {
       createBoxes(amount, boxSize);
     } else {
-      alert("Число должно быть больше 0");
+      alert("Число должно быть больше 0 и меньше 101");
     }
   }
   if (target === destroy) {
@@ -73,7 +78,7 @@ function createBoxes(amount, boxSize) {
         display: flex;
         justify-content: center;
         align-items: center;
-        transform: rotate(${randomAngle()}turn);`
+        transform: rotate(${randomAngle()}deg);`
     );
     currentParent.appendChild(box);
     currentParent = currentParent.childNodes[0];

@@ -6,9 +6,29 @@
 const input = document.querySelector("input#font-size-control");
 const output = document.querySelector("span#text");
 
-input.addEventListener("change", changeOutputFontSize);
+input.setAttribute("min", 5);
+input.addEventListener("input", handleScrollbar);
 
-function changeOutputFontSize(event) {
+output.style.fontSize = "2em";
+// output.style.fontSize = "18px";
+
+const starValue = Number(input.value);
+const fontSize = output.style.fontSize
+  ? parseFloat(convertToEm(output.style.fontSize))
+  : 1;
+const max = (fontSize * 100) / starValue;
+
+function handleScrollbar(event) {
   const value = event.currentTarget.value;
-  output.setAttribute("style", `font-size:${1 + value / 100}em;`);
+  output.style.fontSize = `${(max * value) / 100}em`;
+}
+
+function convertToEm(str) {
+  if (str.includes("px")) {
+    const html = document.querySelector("html");
+    return `${parseInt(str) / parseFloat(getComputedStyle(html).fontSize)}em`;
+  }
+  if (str.includes("em")) {
+    return str;
+  }
 }
