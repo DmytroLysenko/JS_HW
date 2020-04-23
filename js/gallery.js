@@ -66,50 +66,49 @@ function handleClick(e) {
 
 function handleKeybord(e) {
   const key = e.keyCode;
-  console.log(e);
   if (key === 27) {
     closeLightbox(e);
     return;
   }
   if (key === 37 || key === 39) {
-    changeLightboxImg(key);
-  }
-
-  function changeLightboxImg(key) {
     const direction = key === 37 ? "left" : "right";
-    let currentNumb;
-    const currentImg = Array.from(refs.gallery.querySelectorAll("img")).find(
-      (img, idx) => {
-        if (img.dataset.source === refs.lightbox_img.getAttribute("src")) {
-          currentNumb = idx;
-          return img;
-        }
+    changeLightboxImg(direction);
+  }
+}
+
+function changeLightboxImg(direction) {
+  let currentNumb;
+  const currentImg = Array.from(refs.gallery.querySelectorAll("img")).find(
+    (img, idx) => {
+      if (img.dataset.source === refs.lightbox_img.getAttribute("src")) {
+        currentNumb = idx;
+        return img;
       }
-    );
-    const galleryItems = Array.from(
-      refs.gallery.querySelectorAll(".gallery__item")
-    );
-
-    const nextImg = galleryItems[
-      nextItem(galleryItems.length, currentNumb, direction)
-    ].querySelector(".gallery__image");
-
-    const imgURL = nextImg.dataset.source;
-    const imgAlt = nextImg.getAttribute("alt");
-
-    refs.lightbox_img.setAttribute("src", imgURL);
-    refs.lightbox_img.setAttribute("alt", imgAlt);
-
-    function nextItem(length, current, direction) {
-      let next;
-      if (direction === "left") {
-        next = current === 0 ? length - 1 : current - 1;
-      }
-      if (direction === "right") {
-        next = current === length - 1 ? 0 : current + 1;
-      }
-      return next;
     }
+  );
+  const galleryItems = Array.from(
+    refs.gallery.querySelectorAll(".gallery__item")
+  );
+
+  const nextImg = galleryItems[
+    nextItem(galleryItems.length, currentNumb, direction)
+  ].querySelector(".gallery__image");
+
+  const imgURL = nextImg.dataset.source;
+  const imgAlt = nextImg.getAttribute("alt");
+
+  refs.lightbox_img.setAttribute("src", imgURL);
+  refs.lightbox_img.setAttribute("alt", imgAlt);
+
+  function nextItem(length, current, direction) {
+    let next;
+    if (direction === "left") {
+      next = current === 0 ? length - 1 : current - 1;
+    }
+    if (direction === "right") {
+      next = current === length - 1 ? 0 : current + 1;
+    }
+    return next;
   }
 }
 
@@ -118,8 +117,42 @@ function openLightbox(img) {
   refs.lightbox_img.setAttribute("src", img.dataset.source);
   refs.lightbox_img.setAttribute("alt", img.alt);
 
+  // Activation Listeners
   refs.lightbox.addEventListener("click", closeLightbox);
   window.addEventListener("keyup", handleKeybord);
+  touchStart(refs.lightbox_img);
+}
+
+function touchStart(el) {
+  el.addEventListener("touchstart", handleTouchStart);
+  el.addEventListener("touchend", handleTouchEnd);
+  el.addEventListener("touchmove", _.throttle(handleTouchMove, 500));
+}
+
+function touchStop(el) {
+  el.removeEventListener("touchstart", handleTouchStart);
+  el.removeEventListener("touchend", handleTouchEnd);
+  el.removeEventListener("touchmove", _.throttle(handleTouchMove, 500));
+}
+
+// Handling Touch Events
+let xStart,
+  xEnd = 0;
+
+function handleTouchStart(e) {
+  xStart = e.touches[0].clientX;
+}
+
+function handleTouchMove(e) {
+  xEnd = e.touches[0].clientX;
+}
+
+function handleTouchEnd(e) {
+  if (!xStart || !xEnd) {
+    return;
+  }
+  const direction = xStart - xEnd > 0 ? "left" : "right";
+  changeLightboxImg(direction);
 }
 
 function closeLightbox(e) {
@@ -129,6 +162,7 @@ function closeLightbox(e) {
   // Remove Listeners
   refs.lightbox.removeEventListener("click", closeLightbox);
   refs.lightbox.removeEventListener("keydown", handleKeybord);
+  touchStop(refs.lightbox_img);
   // Close Modal
   refs.lightbox.classList.remove("is-open");
   // Clear Lightbox`s img attributes
