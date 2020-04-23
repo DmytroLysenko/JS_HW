@@ -123,16 +123,17 @@ function openLightbox(img) {
   touchStart(refs.lightbox_img);
 }
 
+const doHandleTouchMove = _.throttle(handleTouchMove, 500);
 function touchStart(el) {
   el.addEventListener("touchstart", handleTouchStart);
   el.addEventListener("touchend", handleTouchEnd);
-  el.addEventListener("touchmove", _.throttle(handleTouchMove, 500));
+  el.addEventListener("touchmove", doHandleTouchMove);
 }
 
 function touchStop(el) {
   el.removeEventListener("touchstart", handleTouchStart);
   el.removeEventListener("touchend", handleTouchEnd);
-  el.removeEventListener("touchmove", _.throttle(handleTouchMove, 500));
+  el.removeEventListener("touchmove", doHandleTouchMove);
 }
 
 // Handling Touch Events
@@ -141,6 +142,7 @@ let xStart,
 
 function handleTouchStart(e) {
   xStart = e.touches[0].clientX;
+
 }
 
 function handleTouchMove(e) {
