@@ -70,22 +70,34 @@ function handleKeybord(e) {
     closeLightbox(e);
     return;
   }
+  if (key === 13) {
+    e.preventDefault();
+    return;
+  }
   if (key === 37 || key === 39) {
     const direction = key === 37 ? "left" : "right";
     changeLightboxImg(direction);
   }
+  if (key === 32) {
+    // slideShow();
+  }
 }
 
 function changeLightboxImg(direction) {
-  let currentNumb;
-  const currentImg = Array.from(refs.gallery.querySelectorAll("img")).find(
-    (img, idx) => {
-      if (img.dataset.source === refs.lightbox_img.getAttribute("src")) {
-        currentNumb = idx;
-        return img;
-      }
-    }
-  );
+  // let currentNumb;
+  // const currentImg = Array.from(refs.gallery.querySelectorAll("img")).find(
+  //   (img, idx) => {
+  //     if (img.dataset.source === refs.lightbox_img.getAttribute("src")) {
+  //       currentNumb = idx;
+  //       return img;
+  //     }
+  //   }
+  // );
+
+  const arrImgs = Array.from(refs.gallery.querySelectorAll("img"));
+  const currentNumb = arrImgs.findIndex(img);
+  console.log(currentNumb);
+
   const galleryItems = Array.from(
     refs.gallery.querySelectorAll(".gallery__item")
   );
@@ -142,7 +154,6 @@ let xStart,
 
 function handleTouchStart(e) {
   xStart = e.touches[0].clientX;
-
 }
 
 function handleTouchMove(e) {
