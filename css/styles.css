@@ -6,19 +6,3 @@ html {
 *::before {
   box-sizing: inherit;
 }
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  transition-duration: 500ms;
-  transition-property: background-color;
-}
-
-button {
-  background-color: inherit;
-  width: 150px;
-  height: 70px;
-  font-size: 2em;
-}
