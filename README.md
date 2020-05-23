@@ -1,115 +1,76 @@
-## Задание 1
+# Таймер обратного отсчета
 
-Напиши функцию `delay(ms)`, которая возвращает промис, переходящий в состояние
-`"resolved"` через `ms` миллисекунд. Значением исполнившегося промиса должно
-быть то кол-во миллисекунд которое передали во время вызова функции `delay`.
+Создай плагин настраиваемого таймера, который ведет обратный отсчет до
+предварительно определенной даты. Такой плагин может использоваться в блогах и
+интернет-магазинах, страницах регистрации событий, во время технического
+обслуживания и т. д.
 
-```js
-const delay = ms => {
-  // Твой код
-};
+![preview](preview.gif)
 
-const logger = time => console.log(`Resolved after ${time}ms`);
+Плагин ожидает следующую HTML-разметку и показывает четыре цифры: дни, часы,
+минуты и секунды в формате `XX:XX:XX:XX`. Количество дней может состоять из
+более чем двух цифр.
 
-// Вызовы функции для проверки
-delay(2000).then(logger); // Resolved after 2000ms
-delay(1000).then(logger); // Resolved after 1000ms
-delay(1500).then(logger); // Resolved after 1500ms
+```html
+<div class="timer" id="timer-1">
+  <div class="field">
+    <span class="value" data-value="days">11</span>
+    <span class="label">Days</span>
+  </div>
+
+  <div class="field">
+    <span class="value" data-value="hours">11</span>
+    <span class="label">Hours</span>
+  </div>
+
+  <div class="field">
+    <span class="value" data-value="mins">11</span>
+    <span class="label">Minutes</span>
+  </div>
+
+  <div class="field">
+    <span class="value" data-value="secs">11</span>
+    <span class="label">Seconds</span>
+  </div>
+</div>
 ```
 
-## Задание 2
-
-Перепиши функцию `toggleUserState()` так, чтобы она не использовала
-callback-функцию `callback`, а принимала всего два параметра `allUsers` и
-`userName` и возвращала промис.
+Плагин это класс `CountdownTimer`, экземпляр которого создает новый таймер с
+настройками.
 
 ```js
-const users = [
-  { name: 'Mango', active: true },
-  { name: 'Poly', active: false },
-  { name: 'Ajax', active: true },
-  { name: 'Lux', active: false },
-];
-
-const toggleUserState = (allUsers, userName, callback) => {
-  const updatedUsers = allUsers.map(user =>
-    user.name === userName ? { ...user, active: !user.active } : user,
-  );
-
-  callback(updatedUsers);
-};
-
-const logger = updatedUsers => console.table(updatedUsers);
-
-/*
- * Сейчас работает так
- */
-toggleUserState(users, 'Mango', logger);
-toggleUserState(users, 'Lux', logger);
-
-/*
- * Должно работать так
- */
-toggleUserState(users, 'Mango').then(logger);
-toggleUserState(users, 'Lux').then(logger);
+new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date('Jul 17, 2019'),
+});
 ```
 
-## Задание 3
-
-Перепиши функцию `makeTransaction()` так, чтобы она не использовала
-callback-функции `onSuccess` и `onError`, а принимала всего один параметр
-`transaction` и возвращала промис.
+Для подсчета значений используй следующие готовые формулы, где `time` - разница
+между `targetDate` и текущей датой.
 
 ```js
-const randomIntegerFromInterval = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const makeTransaction = (transaction, onSuccess, onError) => {
-  const delay = randomIntegerFromInterval(200, 500);
-
-  setTimeout(() => {
-    const canProcess = Math.random() > 0.3;
-
-    if (canProcess) {
-      onSuccess(transaction.id, delay);
-    } else {
-      onError(transaction.id);
-    }
-  }, delay);
-};
-
-const logSuccess = (id, time) => {
-  console.log(`Transaction ${id} processed in ${time}ms`);
-};
-
-const logError = id => {
-  console.warn(`Error processing transaction ${id}. Please try again later.`);
-};
+/*
+ * Оставшиеся дни: делим значение UTC на 1000 * 60 * 60 * 24, количество
+ * миллисекунд в одном дне (миллисекунды * секунды * минуты * часы)
+ */
+const days = Math.floor(time / (1000 * 60 * 60 * 24));
 
 /*
- * Работает так
+ * Оставшиеся часы: получаем остаток от предыдущего расчета с помощью оператора
+ * остатка % и делим его на количество миллисекунд в одном часе
+ * (1000 * 60 * 60 = миллисекунды * минуты * секунды)
  */
-makeTransaction({ id: 70, amount: 150 }, logSuccess, logError);
-makeTransaction({ id: 71, amount: 230 }, logSuccess, logError);
-makeTransaction({ id: 72, amount: 75 }, logSuccess, logError);
-makeTransaction({ id: 73, amount: 100 }, logSuccess, logError);
+const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
 /*
- * Должно работать так
+ * Оставшиеся минуты: получаем оставшиеся минуты и делим их на количество
+ * миллисекунд в одной минуте (1000 * 60 = миллисекунды * секунды)
  */
-makeTransaction({ id: 70, amount: 150 })
-  .then(logSuccess)
-  .catch(logError);
+const mins = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
 
-makeTransaction({ id: 71, amount: 230 })
-  .then(logSuccess)
-  .catch(logError);
-
-makeTransaction({ id: 72, amount: 75 })
-  .then(logSuccess)
-  .catch(logError);
-
-makeTransaction({ id: 73, amount: 100 })
-  .then(logSuccess)
-  .catch(logError);
+/*
+ * Оставшиеся секунды: получаем оставшиеся секунды и делим их на количество
+ * миллисекунд в одной секунде (1000)
+ */
+const secs = Math.floor((time % (1000 * 60)) / 1000);
 ```

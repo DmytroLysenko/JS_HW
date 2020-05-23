@@ -1,3 +1,6 @@
-import * as task_1 from './task-1.js';
-import * as task_2 from './task-2.js';
-import * as task_3 from './task-3.js';
+import CountDownTimer from './CountDownTimer.js';
+
+const timer1 = new CountDownTimer({
+  selector: '#timer-1',
+  targetDate: new Date('Jun 2, 2020'),
+});
