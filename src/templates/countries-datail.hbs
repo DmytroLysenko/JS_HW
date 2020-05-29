@@ -1,0 +1,20 @@
+<table>
+    <tr>
+        <th>{{name}}</th>
+        <th colspan="{{countLanguages}}"><img src="{{flag}}" alt="flag of {{name}}" width="300"></th>
+    </tr>
+    <tr>
+        <td>Population</td>
+        <td colspan="{{countLanguages}}">{{population}}</td>
+    </tr>
+    <tr>
+        <td>Capital</td>
+        <td colspan="{{countLanguages}}">{{capital}}</td>
+    </tr>
+    <tr>
+        <td>Languages</td>
+        {{#each languages}}
+        <td>{{this.name}}</td>
+        {{/each}}
+    </tr>
+</table>
