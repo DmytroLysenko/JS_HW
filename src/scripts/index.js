@@ -11,7 +11,7 @@ const refs = {
   viewer: document.querySelector('#search-viewer'),
 };
 
-refs.input.addEventListener('input', debounce(handleInput, 700));
+refs.input.addEventListener('input', debounce(handleInput, 500));
 
 function handleInput(e) {
   const searchQuery = e.target.value;
@@ -60,5 +60,6 @@ function viewListCountries(arrCountries) {
 
 function showMessage(searchQuery) {
   const message = `Too many matches found for "${searchQuery}". Please enter a more specific query.`;
+  refs.viewer.innerHTML = '';
   alertNotice(message);
 }
