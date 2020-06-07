@@ -1,6 +1,9 @@
-import viewerImg from '../../templates/viewerImages.hbs';
-import searchField from '../../templates/searchField.hbs';
+import viewerTemplate from '../../templates/viewerTemplate.hbs';
+import basicTemplate from '../../templates/basicTemplate.hbs';
+import modalTemplate from '../../templates/modalTemplate.hbs';
+
 import '../../../node_modules/material-icons/iconfont/material-icons.css';
+
 const basicLightbox = require('basiclightbox');
 const InfiniteScroll = require('infinite-scroll');
 
@@ -11,66 +14,82 @@ export default class Pixabay {
     this.page = 1;
     this.PER_PAGE = 12;
     this.selector = selector;
+    this.refs = {};
+    this.searchQuery = '';
     this.init();
   }
 
   init() {
-    const container = document.querySelector(this.selector);
-    const markup = searchField();
-    container.innerHTML = markup;
-    const form = container.querySelector('#search-form');
-    form.addEventListener('submit', this.handleSubmit.bind(this));
-    const viewer = document.querySelector('.viewer');
-    viewer.addEventListener('click', this.handleClick);
+    this.refs.container = document.querySelector(this.selector);
+    const markup = basicTemplate();
+    this.refs.container.innerHTML = markup;
 
-    const infScroll = new InfiniteScroll('.viewer', {
-      // options
-      path: '.pagination__next',
-      append: '.post',
-      history: false,
-    });
+    this.refs.paginationNext = document.querySelector('.pagination__next');
+    this.refs.form = document.querySelector('#search-form');
+    this.refs.viewer = document.querySelector('#viewer');
+
+    this.refs.form.addEventListener('submit', this.handleSubmit.bind(this));
+    this.refs.viewer.addEventListener('click', this.openModal);
   }
 
-  handleClick(e) {
+  openModal(e) {
     if (e.target.nodeName !== 'IMG') {
       return;
     }
-    basicLightbox
-      .create(
-        `
-      <img src="${e.target.dataset.large}" width="800" height="600">
-      `,
-      )
-      .show();
+    const largeImgUrl = e.target.dataset.large;
+    basicLightbox.create(modalTemplate({ largeImgUrl })).show();
   }
 
   handleSubmit(e) {
     e.preventDefault();
+    this.clearViewer();
     const searchQuery = e.target.elements.query.value;
     if (!searchQuery) {
-      this.clearViewer();
       return;
     }
-    this.clearViewer();
-    const searchString = searchQuery.split(' ').join('+');
-    this.getData(searchString);
+    this.searchQuery = searchQuery.split(' ').join('+');
+    console.dir(this.refs.paginationNext);
+    this.refs.paginationNext.href = this.urlQuery;
+
+    this.infScroll = new InfiniteScroll('#viewer', {
+      path: '.pagination__next',
+      append: '.photo-card',
+      history: false,
+      hideNav: '.pagination',
+    });
+    this.infScroll.loadNextPage();
+    // this.loadData();
   }
 
-  getData(searchQuery) {
-    const urlQuery = `${this.BASE_URL}?key=${this.KEY}&q=${searchQuery}&per_page=${this.PER_PAGE}&page=${this.page}`;
-    fetch(urlQuery)
+  get urlQuery() {
+    return `${this.BASE_URL}?key=${this.KEY}&q=${this.searchQuery}&per_page=${this.PER_PAGE}&page=${this.page}`;
+  }
+
+  loadData() {
+    fetch(this.urlQuery)
       .then(j => j.json())
       .then(data => {
-        const markup = viewerImg(data.hits);
-        const viewer = document.querySelector('.viewer');
-        viewer.insertAdjacentHTML('beforeend', markup);
+        const markup = viewerTemplate(data.hits);
+        this.refs.viewer.insertAdjacentHTML('beforeend', markup);
+        this.page++;
       })
       .catch(e => console.warn(e));
   }
 
+  // loadNextPage() {
+  //   const searchQuery = document.querySelector('#search-form input').value;
+  //   const nextPageUrl = `${this.BASE_URL}?key=${this.KEY}&q=${searchQuery}&per_page=${this.PER_PAGE}&page=${this.page}`;
+  //   console.log(nextPageUrl);
+  //   // const paginationAnchor = document.querySelector('.pagination__next');
+  //   // paginationAnchor.href = nextPage;
+  // }
+
   clearViewer() {
-    const viewer = document.querySelector('.viewer');
-    viewer.innerHTML = '';
+    this.refs.viewer.innerHTML = '';
     this.page = 1;
+    this.searchQuery = '';
+    if (this.infScroll) {
+      this.infScroll.destroy();
+    }
   }
 }
