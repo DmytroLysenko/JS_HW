@@ -1,6 +1,5 @@
 import '../styles/styles.css';
-import '../../node_modules/basiclightbox/dist/basiclightbox.min.css'
 
-import Pixabay from './utils/apiService';
+import Pixabay from './utils/Pixabay/Pixabay';
 
 const viewerImg = new Pixabay('#viewer-img');
