@@ -1,5 +1,6 @@
 import fetchPixabayData from './components/fetchPixabayData';
-
+import alert from './components/alertPNotify';
+  
 const basicLightbox = require('basiclightbox');
 
 import viewerTemplate from './components/templates/viewerTemplate.hbs';
@@ -9,8 +10,6 @@ import modalTemplate from './components/templates/modalTemplate.hbs';
 import 'material-icons/iconfont/material-icons.css';
 import 'basiclightbox/dist/basiclightbox.min.css';
 import '../Pixabay/components/styles/PixabayStyles.css';
-
-
 
 export default class Pixabay {
   constructor(selector) {
@@ -87,6 +86,7 @@ export default class Pixabay {
     try {
       const data = await fetchPixabayData.fetchData(fetchPixabayData.urlString);
       if (!data.length) {
+        alert('sorry :( nothing was found. Try change search query.');
         return;
       }
       const markup = viewerTemplate(data);
