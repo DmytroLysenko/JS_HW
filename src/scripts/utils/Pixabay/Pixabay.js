@@ -1,36 +1,40 @@
-import fetchPixabayData from './components/fetchPixabayData';
-import alert from './components/alertPNotify';
-  
+import fetchPixabayData from './components/js/fetchPixabayData';
+import Scroll from './components/js/infinityScroll';
+import Btn from './components/js/loadMoreBtn';
+import alert from './components/js/alertPNotify';
+
 const basicLightbox = require('basiclightbox');
 
 import viewerTemplate from './components/templates/viewerTemplate.hbs';
-import basicTemplate from './components/templates/basicTemplate.hbs';
 import modalTemplate from './components/templates/modalTemplate.hbs';
 
 import 'material-icons/iconfont/material-icons.css';
 import 'basiclightbox/dist/basiclightbox.min.css';
 import '../Pixabay/components/styles/PixabayStyles.css';
 
+
 export default class Pixabay {
-  constructor(selector) {
-    this.selector = selector;
+  constructor() {
+    this.selector = '#pixabayViewer';
     this.refs = {};
     this._scrollPosition = 0;
     this.init();
   }
 
   init() {
-    this.refs.container = document.querySelector(this.selector);
-    const markup = basicTemplate();
-    this.refs.container.innerHTML = markup;
-
-    this.refs.form = document.querySelector('#search-form');
-    this.refs.viewer = document.querySelector('#viewer');
-    this.refs.loadMoreBtn = document.querySelector('#load-more-btn');
+    this.refs.form = document.querySelector('#pixabayForm');
+    this.refs.viewer = document.querySelector('#pixabayViewer');
+    this.refs.loadMoreBtn = document.querySelector('#pixabayLoadMoreBtn');
 
     this.refs.form.addEventListener('submit', this.handleSubmit.bind(this));
-    this.refs.loadMoreBtn.addEventListener('click', this.handleLoadMoreBtn.bind(this));
-    this.refs.viewer.addEventListener('click', this.handleViewerClick.bind(this));
+    this.refs.loadMoreBtn.addEventListener(
+      'click',
+      this.handleLoadMoreBtn.bind(this),
+    );
+    this.refs.viewer.addEventListener(
+      'click',
+      this.handleViewerClick.bind(this),
+    );
   }
 
   set scrollPosition(value) {
@@ -42,7 +46,8 @@ export default class Pixabay {
   }
 
   handleLoadMoreBtn(e) {
-    this.scrollPosition = this.refs.viewer.offsetHeight + this.refs.viewer.offsetTop;
+    this.scrollPosition =
+      this.refs.viewer.offsetHeight + this.refs.viewer.offsetTop;
 
     this.insertPixabayData(this.refs.viewer);
 
@@ -52,7 +57,7 @@ export default class Pixabay {
         left: 0,
         behavior: 'smooth',
       });
-    }, 1500);
+    }, 2000);
   }
 
   handleViewerClick(e) {
@@ -73,7 +78,9 @@ export default class Pixabay {
     fetchPixabayData.resetPage();
 
     const searchQuery = e.target.elements.query.value;
+    const isInfinityScroll = e.target.elements.infinityScroll.checked;
     if (!searchQuery) {
+      alert('Enter search query');
       return;
     }
 

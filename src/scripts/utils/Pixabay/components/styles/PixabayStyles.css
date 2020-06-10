@@ -1,22 +1,25 @@
-
-.search__title {
+.pixabay__title {
   color: #f1f1f1;
   text-align: center;
 }
 
-.search-form {
+.pixabay__form {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 30px;
 }
 
-.search-form input {
-  width: 30%;
+.pixabay__search {
+  width: 300px;
   text-align: center;
 }
 
-#viewer {
+.pixabay__infinityScroll {
+  color: #f1f1f1;
+}
+
+#pixabayViewer {
   width: 80%;
   margin: 0 auto;
 }
