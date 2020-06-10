@@ -10,12 +10,20 @@
   padding-bottom: 30px;
 }
 
+.pixabay__input-container {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .pixabay__search {
-  width: 300px;
+  width: 50%;
+  margin: 0 10px;
   text-align: center;
 }
 
-.pixabay__infinityScroll {
+.pixabay__infiniteScroll {
   color: #f1f1f1;
 }
 

@@ -1,118 +1,64 @@
-import fetchPixabayData from './components/js/fetchPixabayData';
-import Scroll from './components/js/infinityScroll';
+import InfScroll from './components/js/infiniteScroll';
 import Btn from './components/js/loadMoreBtn';
-import alert from './components/js/alertPNotify';
+import openLightbox from './components/js/lightbox';
+import alert from './components/js/PNotify';
+import refs from './components/js/refs';
 
-const basicLightbox = require('basiclightbox');
-
-import viewerTemplate from './components/templates/viewerTemplate.hbs';
-import modalTemplate from './components/templates/modalTemplate.hbs';
-
-import 'material-icons/iconfont/material-icons.css';
-import 'basiclightbox/dist/basiclightbox.min.css';
+import basicTemplate from './components/templates/basicTemplate.hbs';
 import '../Pixabay/components/styles/PixabayStyles.css';
 
-
 export default class Pixabay {
-  constructor() {
-    this.selector = '#pixabayViewer';
-    this.refs = {};
-    this._scrollPosition = 0;
+  constructor(selector) {
+    this.selector = selector;
     this.init();
   }
 
   init() {
-    this.refs.form = document.querySelector('#pixabayForm');
-    this.refs.viewer = document.querySelector('#pixabayViewer');
-    this.refs.loadMoreBtn = document.querySelector('#pixabayLoadMoreBtn');
+    refs.set = [{ container: document.querySelector(this.selector) }];
 
-    this.refs.form.addEventListener('submit', this.handleSubmit.bind(this));
-    this.refs.loadMoreBtn.addEventListener(
-      'click',
-      this.handleLoadMoreBtn.bind(this),
-    );
-    this.refs.viewer.addEventListener(
-      'click',
-      this.handleViewerClick.bind(this),
-    );
+    refs.container.innerHTML = basicTemplate();
+
+    refs.set = [
+      { form: document.querySelector('#pixabayForm') },
+      { viewer: document.querySelector('#pixabayViewer') },
+      { loadMoreBtn: document.querySelector('#pixabayLoadMoreBtn') },
+    ];
+
+    refs.viewer.addEventListener('click', openLightbox);
+    refs.loadMoreBtn.addEventListener('click', this.handleBtn);
+    refs.form.addEventListener('submit', this.handleSubmit.bind(this));
   }
 
-  set scrollPosition(value) {
-    this._scrollPosition = value;
-  }
-
-  get scrollPosition() {
-    return this._scrollPosition;
-  }
-
-  handleLoadMoreBtn(e) {
-    this.scrollPosition =
-      this.refs.viewer.offsetHeight + this.refs.viewer.offsetTop;
-
-    this.insertPixabayData(this.refs.viewer);
-
-    setTimeout(() => {
-      scrollTo({
-        top: this._scrollPosition,
-        left: 0,
-        behavior: 'smooth',
-      });
-    }, 2000);
-  }
-
-  handleViewerClick(e) {
-    const nodeName = e.target.nodeName;
-    if (nodeName !== 'IMG') {
-      return;
-    }
-    const largeImgUrl = e.target.dataset.large;
-    basicLightbox.create(modalTemplate({ largeImgUrl })).show();
+  handleBtn(e) {
+    const el = e.target;
+    Btn.handle();
   }
 
   handleSubmit(e) {
     e.preventDefault();
+    const searchQuery = e.target.elements.query.value;
+    const isInfScroll = e.target.elements.infiniteScroll.checked;
+    if (InfScroll.isRun) {
+      InfScroll.stop();
+    }
     requestAnimationFrame(() => {
-      this.hideLoadMoreBtn();
+      Btn.hide();
       this.clearViewer();
     });
-    fetchPixabayData.resetPage();
 
-    const searchQuery = e.target.elements.query.value;
-    const isInfinityScroll = e.target.elements.infinityScroll.checked;
     if (!searchQuery) {
       alert('Enter search query');
       return;
     }
-
-    fetchPixabayData.searchQueryString = searchQuery;
-
-    this.insertPixabayData(this.refs.viewer);
-  }
-
-  async insertPixabayData(element) {
-    try {
-      const data = await fetchPixabayData.fetchData(fetchPixabayData.urlString);
-      if (!data.length) {
-        alert('sorry :( nothing was found. Try change search query.');
-        return;
-      }
-      const markup = viewerTemplate(data);
-      element.insertAdjacentHTML('beforeend', markup);
-      this.showLoadMoreBtn();
-    } catch {
-      e => console.warn(e);
+    if (isInfScroll) {
+      InfScroll.run(searchQuery);
+    } else {
+      Btn.reset(e);
+      Btn.insertData(refs.viewer);
     }
   }
 
-  showLoadMoreBtn() {
-    this.refs.loadMoreBtn.removeAttribute('hidden');
-  }
-
-  hideLoadMoreBtn() {
-    this.refs.loadMoreBtn.setAttribute('hidden', true);
-  }
-
   clearViewer() {
-    this.refs.viewer.innerHTML = '';
+    refs.viewer.innerHTML = '';
   }
 }
